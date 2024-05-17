@@ -1,0 +1,147 @@
+.header{
+    margin: 0;
+    background-color: #1B1E20;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1000;
+}
+
+.navlogo{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navlogo .pinnaclelogo{
+    width: 60px;
+    height: 60px;
+}
+
+.navlogo span{
+    margin: 0 10px;
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+
+}
+
+.header .navigation{
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 40%;
+}
+
+.header .navigation span{
+    width: 25%;
+    height: 100%;
+    text-align: center;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.header .navigation span:hover{
+    color: #FE7804;
+}
+
+.navigation .nav_under_bar{
+    position: absolute;
+    bottom: 5px;
+    left: 0;
+    height: 3px;
+    width: 25%;
+    background: linear-gradient(to top, #FF451D, #FE7804);
+    z-index: 10;
+    transition: all ease 0.5s;
+}
+
+.navicon{
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navicon img{
+    height: 40px;
+    width: 40px;
+    margin: 0 10px;
+}
+
+.navicon .user_profile{
+    display: flex;
+}
+
+.navicon .user_profile .user_dtails{
+    margin: 0;
+    height: 100%;
+    padding: 0 15px;
+    font-size: 16px;
+}
+
+.navicon .user_profile .user_dtails .user_name{
+    color: white;
+    font-weight: 600;
+}
+
+.navicon .user_profile .user_dtails .user_settings{
+    color: #d9d9d9; 
+}
+
+.menubtn {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    /* float: left; */
+    margin: auto 0px;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+.mobile_navbar {
+    position: absolute;
+    background-color: #1B1E20;
+    width: 30%;
+    height: 100vh;
+    display: none;
+}
+/* ############### mobile ############### */
+@media (max-width: 900px) {
+    .menubtn {
+        display: block;
+    }
+
+    .header .navigation {
+        display: none;
+    }
+
+    .header .navicon {
+        display: none;
+    }
+
+    .mobile_navbar {
+        display: block;
+    }
+
+    .mobile_navbar .navigationlist {
+        list-style: none;
+        line-height: 3rem;
+    }
+
+    .mobile_navbar .navigationlist li span {
+        color: white;
+        font-weight: 600;
+    }
+
+    .mobile_navbar .navigationlist li span:hover {
+        color: #FE7804;
+    }
+}

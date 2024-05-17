@@ -1,0 +1,20 @@
+.superbtn:hover ~ .bgdivbtn {
+    margin-right: 0px;
+    background-color: blue;
+}
+
+.btndisabled {
+    border: 2px solid rgba(255, 255, 255, 0.301);
+    color: rgba(255, 255, 255, 0.301);
+  }
+
+.btnenable{
+    background-color: transparent;
+    color: #FE7804;
+    border: 2px solid #FE7804;
+}
+
+.btnenable:hover{
+    color: white;
+    background-color: #FE7804;
+} 

@@ -1,0 +1,13 @@
+.btn{
+    padding: 8px 15px;
+    background: linear-gradient(to right, #FF451D, #FE7804);
+    color: white;
+    font-weight: 600;
+    border-radius: 25px;
+    border: none;
+    transition: all ease 0.5s;
+}
+
+.btn:hover{
+    background: linear-gradient(to left, #FF451D, #FE7804);
+}

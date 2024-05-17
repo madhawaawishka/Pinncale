@@ -1,0 +1,28 @@
+.gradient-text-platinum{
+    background-image: linear-gradient(to bottom, #E8E8E7, #6a6966);
+    -webkit-background-clip: text; /* For webkit browsers */
+    background-clip: text;
+    color: transparent;
+}
+
+.gradient-text-gold{
+    background-image: linear-gradient(to bottom, #fadb2ce4, #A0730D);
+    -webkit-background-clip: text; /* For webkit browsers */
+    background-clip: text;
+    color: transparent;
+}
+
+.gradient-text-silvet{
+    background-image: linear-gradient(to bottom, #f1f0efe3, #B1B4B5);
+    -webkit-background-clip: text; /* For webkit browsers */
+    background-clip: text;
+    color: transparent;
+}
+
+.bg-blur {
+    backdrop-filter: blur(10px); /* Adjust the blur radius as needed */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
