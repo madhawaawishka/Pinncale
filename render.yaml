@@ -1,0 +1,67 @@
+services:
+  # ----------------------------------------------------
+  # 1. Backend Web Service (Node.js + Express + MongoDB)
+  # ----------------------------------------------------
+  - type: web
+    name: pinnacle-server
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node index.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: MONGODB_URI
+        value: mongodb+srv://pinnacleitp:pinnacle123@crud.vsshiuj.mongodb.net/?retryWrites=true&w=majority&appName=crud
+      - key: SESSION_SECRET
+        generateValue: true
+
+  # ----------------------------------------------------
+  # 2. Main Client Application (React SPA - pinnacle)
+  # ----------------------------------------------------
+  - type: web
+    name: pinnacle-client
+    runtime: static
+    plan: free
+    rootDir: pinnacle
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: CI
+        value: "false"
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: pinnacle-server
+          property: host
+
+  # ----------------------------------------------------
+  # 3. Admin Dashboard Application (React SPA - admin)
+  # ----------------------------------------------------
+  - type: web
+    name: pinnacle-admin
+    runtime: static
+    plan: free
+    rootDir: admin
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: CI
+        value: "false"
+      - key: REACT_APP_API_URL
+        fromService:
+          type: web
+          name: pinnacle-server
+          property: host

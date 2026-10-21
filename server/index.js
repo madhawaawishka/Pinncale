@@ -42,9 +42,34 @@ const cookieParser = require('cookie-parser');
 const store = session.MemoryStore();
 
 const app = express();
+const isProduction = process.env.NODE_ENV === 'production';
+
+// Enable trust proxy for Render / cloud reverse proxies (critical for secure HTTPS cookies)
+if (isProduction) {
+  app.set('trust proxy', 1);
+}
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3002',
+  process.env.CLIENT_URL,
+  process.env.ADMIN_URL,
+].filter(Boolean);
+
 app.use(
   cors({
-    origin: ['http://localhost:3000', 'http://localhost:3002'],
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.indexOf(origin) !== -1 ||
+        origin.endsWith('.onrender.com') ||
+        origin.includes('localhost') ||
+        !isProduction
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
@@ -52,14 +77,14 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   session({
-    secret: 'secret',
+    secret: process.env.SESSION_SECRET || 'pinnacle_session_secret',
     resave: false,
     saveUninitialized: false,
     cookie: {
-      sameSite: false,
-      secure: false,
+      sameSite: isProduction ? 'none' : 'lax',
+      secure: isProduction,
       httpOnly: true,
-      maxAge: 1000 * 60 * 60,
+      maxAge: 1000 * 60 * 60 * 24,
     },
     store,
   })
@@ -67,13 +92,19 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-mongoose.connect(
-  "mongodb+srv://pinnacleitp:pinnacle123@crud.vsshiuj.mongodb.net/?retryWrites=true&w=majority&appName=crud",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+// Health check endpoint for cloud platforms
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', uptime: process.uptime() });
+});
+
+const MONGODB_URI =
+  process.env.MONGODB_URI ||
+  "mongodb+srv://pinnacleitp:pinnacle123@crud.vsshiuj.mongodb.net/?retryWrites=true&w=majority&appName=crud";
+
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 // mongoose.connect("mongodb://127.0.0.1:27017/pinnacle")
 
@@ -388,7 +419,7 @@ app.post("/api/payment", async (req, res) => {
       currency: "usd",
       description: description,
       confirm: true,
-      return_url: "http://localhost:3000/account",
+      return_url: process.env.CLIENT_URL ? `${process.env.CLIENT_URL}/account` : "http://localhost:3000/account",
     });
 
     // PaymentIntent was successful
@@ -1582,6 +1613,7 @@ app.get('/getallfeedbacks', (req, res) => {
 
 
 
-app.listen(3001, () => {
-  console.log("Server is Running");
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is Running on port ${PORT}`);
 });
