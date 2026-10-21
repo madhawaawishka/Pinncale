@@ -15,7 +15,7 @@ export default function GameDetailsPage() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const gameId = queryParams.get("gameid");
-  const [gamedetail, setGameDetail] = useState([]);
+  const [gamedetail, setGameDetail] = useState({});
   const [downloads, setDownloads] = useState([]);
   const [buyBtnEnable, setBuyBtnEnable] = useState(true);
   const [payError, setPayError] = useState(false);
@@ -73,16 +73,31 @@ export default function GameDetailsPage() {
   }, [memberID]);
 
   useEffect(() => {
-    downloads.forEach((item) => {
-      if (item.gameid == gameId) {
-        setBuyBtnEnable(false);
-        setCartAvailability(true);
-      }
-    });
+    if (Array.isArray(downloads)) {
+      downloads.forEach((item) => {
+        if (item.gameid == gameId) {
+          setBuyBtnEnable(false);
+          setCartAvailability(true);
+        }
+      });
+    }
 
-    const filtered = gameDetails.filter((game) =>game.name.toLowerCase().startsWith(gamedetail.name.toLowerCase().slice(0, 6)));
-    setFilteredGames(filtered);
-  }, [gameId, downloads, gameDetails]);
+    if (gamedetail && typeof gamedetail.name === "string" && Array.isArray(gameDetails)) {
+      const prefix = gamedetail.name.toLowerCase().slice(0, 6);
+      const filtered = gameDetails.filter(
+        (game) =>
+          game &&
+          typeof game.name === "string" &&
+          game._id !== gameId &&
+          game.name.toLowerCase().startsWith(prefix)
+      );
+      setFilteredGames(
+        filtered.length > 0
+          ? filtered
+          : gameDetails.filter((game) => game && game._id !== gameId).slice(0, 3)
+      );
+    }
+  }, [gameId, downloads, gameDetails, gamedetail]);
 
   const paymentValidationMessage = () => {
     setPayError(true);
